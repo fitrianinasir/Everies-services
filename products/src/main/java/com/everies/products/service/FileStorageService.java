@@ -26,7 +26,9 @@ public class FileStorageService {
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
         System.out.println("1. File storage location is = " + fileStorageLocation);
         try {
-            Files.createDirectories(this.fileStorageLocation);
+            if(!Files.exists(this.fileStorageLocation)){
+                Files.createDirectories(this.fileStorageLocation);
+            }
         }catch (Exception ex){
             throw new FileStorageException("Could not create the directory where the upload files will be stored.", ex);
         }
@@ -34,6 +36,7 @@ public class FileStorageService {
 
     public String storeFile(MultipartFile file){
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        System.out.println("1. File name is " + fileName);
         try {
             if(fileName.contains("..")){
                 throw new FileStorageException("File name contains invalid path " + fileName);
@@ -47,6 +50,21 @@ public class FileStorageService {
         }catch (IOException ex){
             throw new FileStorageException("Could not store file " + fileName, ex);
         }
+    }
+
+    public boolean deleteFile(String fileName) {
+        Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+        try{
+            if(Files.exists(filePath)){
+                System.out.println("file exist and will be deleted");
+                Files.delete(filePath);
+            }else{
+                return false;
+            }
+        } catch (IOException e) {
+            throw new FileNotFoundException("File is not found",e);
+        }
+        return true;
     }
 
     public Resource loadFileAsResource(String fileName){

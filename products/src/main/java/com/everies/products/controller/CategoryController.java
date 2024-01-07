@@ -2,14 +2,22 @@ package com.everies.products.controller;
 
 
 import com.everies.products.dto.ResMsg;
+import com.everies.products.dto.UploadFileRes;
 import com.everies.products.model.CategoryModel;
 import com.everies.products.model.SubCategoryModel;
 import com.everies.products.service.CategoryService;
+import com.everies.products.service.FileStorageService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -60,12 +68,14 @@ public class CategoryController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+
+
     // =========================== SUB CATEGORY ===================================
 
     @GetMapping("/sub-categories")
     public @ResponseBody ResponseEntity<ResMsg> getAllSubCategories(){
         List<SubCategoryModel> sub_categories = categoryService.getAllSubCategories();
-        ResMsg response = new ResMsg(200, "sub categories retrieved successfully", sub_categories);
+        ResMsg response = new ResMsg(200, "Sub categories retrieved successfully", sub_categories);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
