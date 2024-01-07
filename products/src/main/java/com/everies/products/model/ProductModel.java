@@ -1,0 +1,42 @@
+package com.everies.products.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Data
+@Builder
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "TBL_PRODUCT")
+public class ProductModel {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "id_sub_category")
+    private Integer id_sub_category;
+
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "img")
+    private String img;
+
+    @Column(name = "price")
+    private Integer price;
+
+    @Column(name = "stock_by_type")
+    private String stock_by_type;
+
+    @Column(name = "stock_by_size")
+    private String stock_by_size;
+
+    @Column(name = "rate")
+    private Float rate;
+
+    @Column(name = "sold")
+    private Integer sold;
+}
