@@ -3,19 +3,26 @@ package com.everies.products.service;
 import com.everies.products.configuration.FileStorageProperties;
 import com.everies.products.exception.FileNotFoundException;
 import com.everies.products.exception.FileStorageException;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
 
 @Service
 public class FileStorageService {
@@ -35,16 +42,20 @@ public class FileStorageService {
     }
 
     public String storeFile(MultipartFile file){
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        System.out.println("1. File name is " + fileName);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        String timestamp = dateFormat.format(new Date());
+
+        Random random = new Random();
+        int randomInt = random.nextInt(10000); // Adjust the range as needed
+
+        String realFileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String fileName = timestamp +"_"+randomInt+".jpeg";
         try {
             if(fileName.contains("..")){
-                throw new FileStorageException("File name contains invalid path " + fileName);
+                throw new FileStorageException("File name contains invalid path " + realFileName);
             }
 
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
-            System.out.println("2. target Location with file name is:" + targetLocation);
-            System.out.println("3. get input stream of file => " + file.getInputStream().toString());
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             return fileName;
         }catch (IOException ex){
@@ -56,7 +67,6 @@ public class FileStorageService {
         Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
         try{
             if(Files.exists(filePath)){
-                System.out.println("file exist and will be deleted");
                 Files.delete(filePath);
             }else{
                 return false;
@@ -67,19 +77,9 @@ public class FileStorageService {
         return true;
     }
 
-    public Resource loadFileAsResource(String fileName){
-        try{
-            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
-            System.out.println("4. file path get from fileStorgeLocation normalize => " + filePath);
-            Resource resource = new UrlResource(filePath.toUri());
-            if(resource.exists()){
-                return resource;
-            }else{
-                throw new FileStorageException("File not found " + fileName);
-            }
-        }catch (MalformedURLException ex){
-            throw new FileNotFoundException("File not found " + fileName, ex);
-        }
+    public File loadFileAsResource(String fileName){
+        File serverFile = new File(this.fileStorageLocation.resolve(fileName).normalize().toUri());
+        return serverFile;
     }
 
 }

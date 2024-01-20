@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ProductController {
     @Autowired
     ProductService productService;
@@ -52,5 +53,11 @@ public class ProductController {
         productService.deleteProduct(id);
         ResMsg response = new ResMsg(200, "Product deleted successfully", null);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("/truncate-product")
+    public void truncateTblProduct(){
+        productService.truncateTblProduct();
     }
 }

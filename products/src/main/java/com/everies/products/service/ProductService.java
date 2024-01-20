@@ -34,4 +34,8 @@ public class ProductService {
     public void deleteProduct(Integer id){
         productRepo.deleteById(id);
     }
+
+    public void truncateTblProduct(){
+        productRepo.truncateTblProduct();
+    }
 }

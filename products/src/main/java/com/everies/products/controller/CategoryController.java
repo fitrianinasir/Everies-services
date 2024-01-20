@@ -25,6 +25,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("api")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class CategoryController {
     @Autowired
     CategoryService categoryService;

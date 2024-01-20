@@ -26,7 +26,4 @@ public class CategoryModel {
     @Column(name = "img")
     private String img;
 
-    @Column(name = "category_order")
-    private Integer category_order;
-
 }
