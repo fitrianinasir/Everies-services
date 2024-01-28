@@ -16,8 +16,6 @@ public class OrderedProductsModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY )
     private Integer id;
 
-    @Column(name = "order_id")
-    private Integer order_Id;
 
     @Column(name = "product_id")
     private Integer product_id;
@@ -36,4 +34,8 @@ public class OrderedProductsModel {
 
     @Column(name = "total")
     private Integer total;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private OrderModel orderModel;
 }

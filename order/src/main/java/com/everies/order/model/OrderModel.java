@@ -2,10 +2,13 @@ package com.everies.order.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.query.Order;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -47,4 +50,7 @@ public class OrderModel {
 
     @Column(name = "notes")
     private String notes;
+
+    @OneToMany(mappedBy = "orderModel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderedProductsModel> ordered_products = new ArrayList<>();
 }
