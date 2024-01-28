@@ -35,7 +35,7 @@ public class ProductModel {
     private String stock_by_size;
 
     @Column(name = "rate")
-    private Float rate;
+    private Integer rate;
 
     @Column(name = "sold")
     private Integer sold;

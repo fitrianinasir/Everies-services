@@ -3,7 +3,6 @@ package com.everies.products.controller;
 import com.everies.products.dto.ResMsg;
 import com.everies.products.model.ProductModel;
 import com.everies.products.service.ProductService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

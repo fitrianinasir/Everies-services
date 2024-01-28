@@ -1,6 +1,5 @@
 package com.everies.products.service;
 
-import com.everies.products.dto.CategoryDTO;
 import com.everies.products.model.CategoryModel;
 import com.everies.products.model.SubCategoryModel;
 import com.everies.products.repository.CategoryRepo;

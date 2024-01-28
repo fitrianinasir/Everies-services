@@ -2,22 +2,16 @@ package com.everies.products.controller;
 
 
 import com.everies.products.dto.ResMsg;
-import com.everies.products.dto.UploadFileRes;
 import com.everies.products.model.CategoryModel;
 import com.everies.products.model.SubCategoryModel;
+import com.everies.products.model.TypeModel;
+import com.everies.products.repository.CategoryTypeRepo;
 import com.everies.products.service.CategoryService;
-import com.everies.products.service.FileStorageService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +23,9 @@ import java.util.Optional;
 public class CategoryController {
     @Autowired
     CategoryService categoryService;
+
+    @Autowired
+    CategoryTypeRepo categoryTypeRepo;
 
 
 
@@ -80,6 +77,7 @@ public class CategoryController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+
     @GetMapping("/sub-category/{id}")
     public @ResponseBody ResponseEntity<ResMsg> getSubCategory(@PathVariable("id") Integer id){
         Optional<SubCategoryModel> sub_categories = categoryService.getSubCategory(id);
@@ -95,6 +93,7 @@ public class CategoryController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+
     @PutMapping("/sub-category/{id}")
     public @ResponseBody ResponseEntity<ResMsg> updateSubCategory(@PathVariable("id") Integer id, @RequestBody SubCategoryModel subCategoriesModel){
         SubCategoryModel sub_categories = categoryService.updateSubCategory(id, subCategoriesModel);
@@ -102,12 +101,55 @@ public class CategoryController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+
     @DeleteMapping("/sub-category/{id}")
     public @ResponseBody ResponseEntity<ResMsg> deleteSubCategory(@PathVariable("id") Integer id){
         categoryService.deleteSubCategory(id);
         ResMsg response = new ResMsg(200, "sub category deleted successfully", null);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+
+
+    //================= TYPE ========================
+    @GetMapping("/category-types")
+    public @ResponseBody ResponseEntity<ResMsg> getCategoryTypes(){
+        List<TypeModel> types = categoryTypeRepo.findAll();
+        ResMsg response = new ResMsg(200, "Types retrieved successfully", types);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/category-type/{id}")
+    public @ResponseBody ResponseEntity<ResMsg> getCategoryType(@PathVariable("id") Integer id){
+        Optional<TypeModel> type = categoryTypeRepo.findById(id);
+        ResMsg response = new ResMsg(200, "type retrieved successfully", type);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+
+    @PostMapping("/category-type")
+    public @ResponseBody ResponseEntity<ResMsg> createCategoryType(@RequestBody TypeModel typeModel){
+        TypeModel type = categoryTypeRepo.save(typeModel);
+        ResMsg response = new ResMsg(201, "type created successfully", type);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/category-type/{id}")
+    public @ResponseBody ResponseEntity<ResMsg> updateCategoryType(@PathVariable("id") Integer id, @RequestBody TypeModel typeModel){
+        typeModel.setId(id);
+        TypeModel type = categoryTypeRepo.save(typeModel);
+        ResMsg response = new ResMsg(200, "type updated successfully", type);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/category-type/{id}")
+    public @ResponseBody ResponseEntity<ResMsg> deleteCategoryType(@PathVariable("id") Integer id){
+        categoryTypeRepo.deleteById(id);
+        ResMsg response = new ResMsg(200, "type deleted successfully", null);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
     //================= TRUNCATE ========================
 
