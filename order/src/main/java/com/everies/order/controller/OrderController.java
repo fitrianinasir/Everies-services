@@ -1,10 +1,9 @@
 package com.everies.order.controller;
 
-import com.everies.order.dto.OrderDTO;
-import com.everies.order.dto.ReqOrder;
-import com.everies.order.dto.ReqPayment;
-import com.everies.order.dto.ResMsg;
-import com.everies.order.model.OrderModel;
+import com.everies.order.data.dto.OrderDTO;
+import com.everies.order.data.io.ReqOrder;
+import com.everies.order.data.io.ReqPayment;
+import com.everies.order.data.io.ResMsg;
 import com.everies.order.service.OrderService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;

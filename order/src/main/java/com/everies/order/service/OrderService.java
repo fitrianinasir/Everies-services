@@ -1,6 +1,8 @@
 package com.everies.order.service;
 
-import com.everies.order.dto.*;
+import com.everies.order.data.dto.OrderDTO;
+import com.everies.order.data.dto.OrderedProductsDTO;
+import com.everies.order.data.io.ReqOrder;
 import com.everies.order.model.OrderModel;
 import com.everies.order.model.OrderedProductsModel;
 import com.everies.order.repository.OrderRepo;
@@ -59,9 +61,9 @@ public class OrderService {
         orderModel.setTotal_payment(reqOrder.getTotal_payment());
         orderModel.setPayment_type(reqOrder.getPayment_type());
         orderModel.setPayment_time(null);
-        orderModel.setPayment_status("Waiting");
+        orderModel.setPayment_status("WAITING PAYMENT");
         orderModel.setNotif_time(null);
-        orderModel.setNotif_status("Waiting");
+        orderModel.setNotif_status("WAITING");
         orderModel.setNotes(reqOrder.getNotes());
 
         OrderModel order = orderRepo.save(orderModel);
@@ -85,5 +87,9 @@ public class OrderService {
         LocalDateTime paymentTime = LocalDateTime.now();
         orderRepo.updatePayment(orderId, paymentStatus, paymentTime);
         return true;
+    }
+
+    private void pushNotification(){
+//
     }
 }

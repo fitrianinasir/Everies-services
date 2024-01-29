@@ -1,4 +1,4 @@
-package com.everies.order.dto;
+package com.everies.order.data.dto;
 
 import com.everies.order.model.OrderedProductsModel;
 import lombok.*;
