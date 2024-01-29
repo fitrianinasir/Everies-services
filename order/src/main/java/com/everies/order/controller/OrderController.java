@@ -1,9 +1,11 @@
 package com.everies.order.controller;
 
 import com.everies.order.data.dto.OrderDTO;
+import com.everies.order.data.io.ReqNotif;
 import com.everies.order.data.io.ReqOrder;
 import com.everies.order.data.io.ReqPayment;
 import com.everies.order.data.io.ResMsg;
+import com.everies.order.model.OrderModel;
 import com.everies.order.service.OrderService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
@@ -45,10 +47,24 @@ public class OrderController {
     @PutMapping("/order/{id}")
     public ResponseEntity<ResMsg> doPayment(@PathVariable("id") Integer id, @RequestBody ReqPayment reqPayment){
         Boolean result = orderService.doPayment(id, reqPayment.getPayment_status());
+
+        OrderDTO orderData = orderService.getOrderById(id);
+
+        ReqNotif notif = new ReqNotif();
+        notif.setOrder_id(orderData.getId());
+        notif.setCustomer_id(orderData.getCustomer_id());
+        notif.setPayment_name(orderData.getPayment_type());
+        notif.setPayment_time(orderData.getPayment_time());
+        notif.setTotal_payment(orderData.getTotal_payment());
+        notif.setStatus_payment(orderData.getPayment_status());
+        notif.setOrdered_products(orderData.getOrdered_products());
+
+        orderService.pushNotification(notif);
+
         ResMsg response = new ResMsg();
         if(result){
             response.setStatus(200);
-            response.setMessage("Payment accepted");
+            response.setMessage("Payment updated");
             response.setData(true);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }else{

@@ -2,6 +2,7 @@ package com.everies.order.service;
 
 import com.everies.order.data.dto.OrderDTO;
 import com.everies.order.data.dto.OrderedProductsDTO;
+import com.everies.order.data.io.ReqNotif;
 import com.everies.order.data.io.ReqOrder;
 import com.everies.order.model.OrderModel;
 import com.everies.order.model.OrderedProductsModel;
@@ -10,6 +11,8 @@ import com.everies.order.repository.OrderedProductsRepo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,6 +28,12 @@ public class OrderService {
 
     @Autowired
     OrderedProductsRepo orderedProductsRepo;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    @Value("${spring.mail.username}")
+    private String sender;
 
     public List<OrderDTO> getAllOrders(){
         List<OrderModel> orders = orderRepo.findAll();
@@ -89,7 +98,11 @@ public class OrderService {
         return true;
     }
 
-    private void pushNotification(){
-//
+    public void pushNotification(ReqNotif notif){
+        notif.setCustomer_name("Fitriani Nasir");
+        notif.setCustomer_email("entftr@gmail.com");
+
+        System.out.println(notif);
+
     }
 }
