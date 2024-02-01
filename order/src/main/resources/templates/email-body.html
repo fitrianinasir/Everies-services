@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Everies</title>
+</head>
+<body>
+    <h2 th:text="${'Dear ' + customer}+','"></h2>
+    <h3>Your order has been placed!</h3>
+    <br/>
+    <p th:text="'We have received your payment through ' + ${payment_type} + ' at ' + ${payment_time}"></p>
+    <h3>Your ordered products:</h3>
+    <ul>
+        <li th:each="product : ${products}">
+            <p th:text="'Product Name: '+ ${product.product_name}"></p>
+            <p th:text="'Product Size: '+ ${product.selected_size}"></p>
+            <p th:text="'Product Variant: '+ ${product.selected_variant}"></p>
+            <p th:text="'Item: '+ ${product.amount}"></p>
+            <p th:text="'Total: '+ ${product.total}"></p>
+        </li>
+    </ul>
+
+    <h3 th:text="'Your total is ' + ${total}"></h3>
+
+
+    <p>Please kindly wait for your products to be delivered</p>
+    <p>Thank you!</p>
+
+    <p>Sincerely</p>
+    <p th:style="'font-style: italic;'">EVERIES</p>
+
+</body>
+</html>

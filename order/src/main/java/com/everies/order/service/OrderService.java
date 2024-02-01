@@ -10,10 +10,15 @@ import com.everies.order.repository.OrderRepo;
 import com.everies.order.repository.OrderedProductsRepo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,11 +34,16 @@ public class OrderService {
     @Autowired
     OrderedProductsRepo orderedProductsRepo;
 
-    @Autowired
-    private JavaMailSender javaMailSender;
-
     @Value("${spring.mail.username}")
     private String sender;
+
+    private final JavaMailSender javaMailSender;
+    private final TemplateEngine templateEngine;
+
+    public OrderService(JavaMailSender javaMailSender, TemplateEngine templateEngine) {
+        this.javaMailSender = javaMailSender;
+        this.templateEngine = templateEngine;
+    }
 
     public List<OrderDTO> getAllOrders(){
         List<OrderModel> orders = orderRepo.findAll();
@@ -99,10 +109,32 @@ public class OrderService {
     }
 
     public void pushNotification(ReqNotif notif){
+        String templateName = "email-body";
         notif.setCustomer_name("Fitriani Nasir");
         notif.setCustomer_email("entftr@gmail.com");
 
         System.out.println(notif);
+
+        Context context = new Context();
+        context.setVariable("customer", notif.getCustomer_name());
+        context.setVariable("payment_type", notif.getPayment_name());
+        context.setVariable("payment_time", notif.getPayment_time());
+        context.setVariable("products", notif.getOrdered_products());
+        context.setVariable("total", notif.getTotal_payment());
+
+
+        MimeMessage msg = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(msg, "UTF-8");
+        try{
+            helper.setTo(notif.getCustomer_email());
+            helper.setSubject("Your Everies Order");
+            String htmlContent = templateEngine.process(templateName, context);
+            helper.setText(htmlContent, true);
+            javaMailSender.send(msg);
+
+        }catch (MessagingException e){
+            System.out.println(e);
+        }
 
     }
 }
