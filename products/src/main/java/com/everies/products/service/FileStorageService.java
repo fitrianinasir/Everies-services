@@ -25,7 +25,6 @@ public class FileStorageService {
     @Autowired
     public FileStorageService(FileStorageProperties fileStorageProperties){
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
-        System.out.println("1. File storage location is = " + fileStorageLocation);
         try {
             if(!Files.exists(this.fileStorageLocation)){
                 Files.createDirectories(this.fileStorageLocation);
@@ -35,7 +34,7 @@ public class FileStorageService {
         }
     }
 
-    public String storeFile(MultipartFile file){
+    public String storeFile(MultipartFile file, String subfolder){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         String timestamp = dateFormat.format(new Date());
 
@@ -48,8 +47,8 @@ public class FileStorageService {
             if(fileName.contains("..")){
                 throw new FileStorageException("File name contains invalid path " + realFileName);
             }
-
-            Path targetLocation = this.fileStorageLocation.resolve(fileName);
+            Path targetLocation = Path.of(this.fileStorageLocation + subfolder).resolve(fileName);
+//            Path targetLocation = this.fileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             return fileName;
         }catch (IOException ex){

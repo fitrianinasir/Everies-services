@@ -2,6 +2,7 @@ package com.everies.products.controller;
 
 import com.everies.products.dto.ResMsg;
 import com.everies.products.model.ProductModel;
+import com.everies.products.model.ProductTypeModel;
 import com.everies.products.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,5 +59,53 @@ public class ProductController {
     @DeleteMapping("/truncate-product")
     public void truncateTblProduct(){
         productService.truncateTblProduct();
+    }
+
+
+    // =========================== PRODUCT TYPE ===================================
+
+    @GetMapping("/product-types")
+    public @ResponseBody ResponseEntity<ResMsg> getAllProductTypes(){
+        List<ProductTypeModel> sub_categories = productService.getAllProductTypes();
+        ResMsg response = new ResMsg(200, "Product types retrieved successfully", sub_categories);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/product-type/{id}")
+    public @ResponseBody ResponseEntity<ResMsg> getProductType(@PathVariable("id") Integer id){
+        Optional<ProductTypeModel> sub_categories = productService.getProductTypeById(id);
+        ResMsg response = new ResMsg(200, "Product type retrieved successfully", sub_categories);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/product-type")
+    public @ResponseBody ResponseEntity<ResMsg> createProductType(@RequestBody ProductTypeModel subCategoriesModel){
+        ProductTypeModel sub_categories = productService.createProductType(subCategoriesModel);
+        ResMsg response = new ResMsg(201, "Product type created successfully", sub_categories);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+
+    @PutMapping("/product-type/{id}")
+    public @ResponseBody ResponseEntity<ResMsg> updateProductType(@PathVariable("id") Integer id, @RequestBody ProductTypeModel subCategoriesModel){
+        ProductTypeModel sub_categories = productService.updateProductType(id, subCategoriesModel);
+        ResMsg response = new ResMsg(200, "Product type updated successfully", sub_categories);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("/product-type/{id}")
+    public @ResponseBody ResponseEntity<ResMsg> deleteProductType(@PathVariable("id") Integer id){
+        productService.deleteProductType(id);
+        ResMsg response = new ResMsg(200, "Product type deleted successfully", null);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/truncate-product-type")
+    public String truncateTblProductType(){
+        productService.truncateTblProductType();
+        return "Product types successfully truncated";
     }
 }

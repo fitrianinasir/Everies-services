@@ -29,7 +29,22 @@ public class UploadFileController {
     // =========================== UPLOAD FILE ===================================
     @PostMapping("/category/img")
     public UploadFileRes uploadFile(@RequestParam("image") MultipartFile file){
-        String fileName = fileStorageService.storeFile(file);
+        String subfolder = "/categories";
+        String fileName = fileStorageService.storeFile(file, subfolder);
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/img/").path(fileName).toUriString();
+
+        UploadFileRes response = new UploadFileRes();
+        response.setFileName(fileName);
+        response.setFileDownloadUri(fileDownloadUri);
+
+        return response;
+    }
+
+    // =========================== UPLOAD FILE ===================================
+    @PostMapping("/product/img")
+    public UploadFileRes uploadProductImg(@RequestParam("image") MultipartFile file){
+        String subfolder = "/products";
+        String fileName = fileStorageService.storeFile(file, subfolder);
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/img/").path(fileName).toUriString();
 
         UploadFileRes response = new UploadFileRes();
