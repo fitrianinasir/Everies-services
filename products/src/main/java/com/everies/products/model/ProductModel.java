@@ -16,8 +16,11 @@ public class ProductModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "id_sub_category")
-    private Integer id_sub_category;
+    @Column(name = "category_id")
+    private Integer category_id;
+
+    @Column(name = "type_id")
+    private Integer type_id;
 
     @Column(name = "title")
     private String title;

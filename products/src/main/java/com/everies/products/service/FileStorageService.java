@@ -75,4 +75,9 @@ public class FileStorageService {
         return serverFile;
     }
 
+    public File getProductImage(String fileName){
+        File serverFile = new File(Path.of(this.fileStorageLocation + "/products").resolve(fileName).normalize().toUri());
+        return serverFile;
+    }
+
 }

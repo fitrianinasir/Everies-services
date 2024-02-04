@@ -68,6 +68,20 @@ public class UploadFileController {
         }
     }
 
+    @GetMapping("/product/img/{imageName}")
+    public ResponseEntity<byte[]> getProductImage(@PathVariable String imageName) {
+        try {
+            File serverFile = fileStorageService.getProductImage(imageName);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG) // Adjust based on your image type
+                    .body( Files.readAllBytes(serverFile.toPath()));
+
+        } catch (Exception e) {
+            System.out.println("Img not found");
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @DeleteMapping("/img/{fileName:.+}")
     public ResMsg deleteFile(@PathVariable String fileName){
         Boolean result = fileStorageService.deleteFile(fileName);
